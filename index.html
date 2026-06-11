@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nghiện Netflix</title>
+<link rel="icon" type="image/jpeg" href="avatar.jpg" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'netflix-red': '#EC1313',
+          'netflix-red-light': '#F04242',
+          'netflix-line': '#FDE3D4',
+          'netflix-line-soft': '#FFF7F0',
+          'netflix-mute': '#71717A',
+          'netflix-dark': '#18181B',
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  * { font-family: 'Inter', system-ui, sans-serif; }
+  body { background:
+      radial-gradient(1200px 600px at 100% -10%, rgba(240,66,66,.06), transparent 60%),
+      radial-gradient(900px 500px at -10% 0%, rgba(236,19,19,.05), transparent 55%),
+      #fffdfb;
+  }
+
+  .card {
+    position: relative; border-radius: 1rem; border: 1px solid #FDE3D4;
+    background: white; padding: 1rem;
+    box-shadow: 0 1px 3px rgba(236,19,19,.06), 0 8px 24px -8px rgba(236,19,19,.10);
+  }
+  @media(min-width:640px){ .card{ padding:1.25rem } }
+
+  .card-hover { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+  .card-hover:hover { border-color: rgba(236,19,19,0.4); box-shadow: 0 18px 50px -15px rgba(236,19,19,.2); }
+
+  .btn-primary {
+    position: relative; overflow: hidden; display: inline-flex;
+    align-items: center; justify-content: center; gap: 0.5rem;
+    white-space: nowrap; border-radius: 0.75rem;
+    padding: 0.625rem 1.25rem; font-size: 0.875rem; font-weight: 600;
+    color: white; cursor: pointer; user-select: none; border: none;
+    background: linear-gradient(135deg, #EC1313, #F04242);
+    box-shadow: 0 1px 3px rgba(236,19,19,.25), 0 8px 24px -8px rgba(236,19,19,.45);
+    transition: all 0.3s;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 0 1px rgba(236,19,19,.35), 0 18px 50px -10px rgba(240,66,66,.45); }
+  .btn-primary::after { content:""; position:absolute; inset:0; background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.45) 48%,transparent 68%); transform:translate(-120%); transition:transform .7s; pointer-events:none; }
+  .btn-primary:hover::after { transform:translate(120%); }
+  .btn-primary:disabled { cursor:not-allowed; opacity:0.5; transform:none; }
+
+  .btn-green { background: linear-gradient(135deg, #10B981, #059669) !important; box-shadow: 0 1px 3px rgba(16,185,129,.25), 0 8px 24px -8px rgba(16,185,129,.45) !important; }
+  .btn-green:hover { box-shadow: 0 0 0 1px rgba(16,185,129,.35), 0 18px 50px -10px rgba(16,185,129,.45) !important; }
+  .btn-teal { background: linear-gradient(135deg, #0D9488, #0F766E) !important; box-shadow: 0 1px 3px rgba(13,148,136,.25), 0 8px 24px -8px rgba(13,148,136,.45) !important; }
+  .btn-teal:hover { box-shadow: 0 0 0 1px rgba(13,148,136,.35), 0 18px 50px -10px rgba(13,148,136,.45) !important; }
+
+  .btn-secondary {
+    position: relative; display: inline-flex; align-items: center;
+    justify-content: center; gap: 0.375rem; white-space: nowrap;
+    border-radius: 0.75rem; padding: 0.5rem 0.75rem;
+    font-size: 0.75rem; font-weight: 600; cursor: pointer;
+    background: white; border: 1px solid #FDE3D4; color: #18181B;
+    box-shadow: 0 1px 2px rgba(236,19,19,.06), 0 4px 12px -4px rgba(236,19,19,.08);
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: rgba(236,19,19,0.3); color: #EC1313; box-shadow: 0 4px 16px -4px rgba(236,19,19,.15); }
+
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 0.375rem;
+    border-radius: 0.5rem; padding: 0.375rem 0.75rem;
+    font-size: 0.75rem; font-weight: 500; cursor: pointer;
+    background: transparent; border: none; color: #71717A;
+    transition: all 0.15s;
+  }
+  .btn-ghost:hover { background: #FFF7F0; color: #EC1313; }
+
+  .tab-btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:0.45rem;
+    border-radius:0.75rem; padding:0.6rem 1rem; font-size:0.875rem; font-weight:600;
+    color:#71717A; background:transparent; border:none; cursor:pointer;
+    transition: all 0.2s; white-space:nowrap;
+  }
+  .tab-btn:hover { color:#EC1313; }
+  .tab-btn.active {
+    color:white;
+    background: linear-gradient(135deg, #EC1313, #F04242);
+    box-shadow: 0 1px 3px rgba(236,19,19,.25), 0 8px 24px -8px rgba(236,19,19,.45);
+  }
+
+  textarea, input { outline:none; }
+  textarea:focus, input:focus { border-color: rgba(236,19,19,.45) !important; box-shadow: 0 0 0 3px rgba(236,19,19,.10); }
+
+  .scroll-thin::-webkit-scrollbar { width:8px; height:8px; }
+  .scroll-thin::-webkit-scrollbar-track { background:transparent; }
+  .scroll-thin::-webkit-scrollbar-thumb { background:linear-gradient(#F04242,#EC1313); border-radius:999px; }
+
+  @keyframes fade-in {
+    0% { opacity:0; transform:translateY(8px); }
+    100% { opacity:1; transform:translateY(0); }
+  }
+  .animate-fade-in { animation: 0.24s cubic-bezier(0.2,0.7,0.2,1) both fade-in; }
+
+  @keyframes float-y { 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-5px) } }
+  @keyframes wiggle { 0%,100%{ transform:rotate(-7deg) } 50%{ transform:rotate(7deg) } }
+  @keyframes glow-pulse { 0%,100%{ box-shadow:0 8px 24px -8px rgba(0,0,0,.25) } 50%{ box-shadow:0 12px 34px -6px rgba(0,0,0,.4) } }
+
+  .contact-card {
+    display:flex; align-items:center; gap:0.9rem; text-decoration:none;
+    border-radius:1rem; padding:0.85rem 1.1rem; min-width:230px;
+    border:1px solid #FDE3D4; background:white;
+    box-shadow:0 1px 3px rgba(236,19,19,.06), 0 8px 24px -10px rgba(236,19,19,.12);
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  .contact-card:hover { transform:translateY(-3px); border-color:rgba(236,19,19,.35); box-shadow:0 18px 44px -14px rgba(236,19,19,.28); }
+  .contact-ico {
+    width:46px; height:46px; border-radius:0.85rem; display:grid; place-items:center;
+    flex-shrink:0; color:white; animation: glow-pulse 2.6s ease-in-out infinite;
+  }
+  .contact-card:hover .contact-ico { animation: wiggle .5s ease-in-out infinite; }
+  .emoji-float { display:inline-block; animation: float-y 2.4s ease-in-out infinite; }
+
+  /* ===== Cute device cards ===== */
+  @keyframes dev-bob { 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-6px) } }
+  @keyframes dev-tilt { 0%,100%{ transform:rotate(-6deg) } 50%{ transform:rotate(6deg) } }
+  @keyframes dev-zoom { 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.12) } }
+  @keyframes ring-pulse { 0%{ transform:scale(.85); opacity:.55 } 70%{ transform:scale(1.5); opacity:0 } 100%{ opacity:0 } }
+  @keyframes screen-blink { 0%,100%{ opacity:1 } 45%{ opacity:.35 } }
+
+  .device-card {
+    position:relative; overflow:hidden; border-radius:1rem; padding:1rem .75rem .8rem;
+    text-align:center; cursor:pointer; transition: all .25s cubic-bezier(0.4,0,0.2,1);
+  }
+  .device-card:hover { transform:translateY(-4px); }
+  .device-ico {
+    position:relative; width:54px; height:54px; margin:0 auto .55rem;
+    border-radius:1rem; display:grid; place-items:center;
+    box-shadow: 0 8px 20px -8px rgba(0,0,0,.3);
+  }
+  .device-ico .ring {
+    position:absolute; inset:0; border-radius:1rem; border:2px solid currentColor;
+    animation: ring-pulse 2.2s ease-out infinite;
+  }
+  .device-ico svg { animation: dev-bob 2.4s ease-in-out infinite; }
+  .device-card:hover .device-ico svg { animation: dev-zoom .7s ease-in-out infinite; }
+  .device-ico .scr { animation: screen-blink 2.6s ease-in-out infinite; }
+  .device-card.tv .device-ico svg { animation: dev-tilt 2.6s ease-in-out infinite; }
+
+  /* ===== Filter chips + result cards ===== */
+  .filter-chip {
+    font-size:.72rem; font-weight:600; padding:.32rem .8rem; border-radius:999px;
+    border:1px solid #FDE3D4; background:white; color:#71717A; cursor:pointer; transition:all .15s;
+  }
+  .filter-chip:hover { color:#EC1313; border-color:rgba(236,19,19,.3); }
+  .filter-chip.active { background:linear-gradient(135deg,#EC1313,#F04242); color:white; border-color:transparent; box-shadow:0 6px 16px -8px rgba(236,19,19,.6); }
+
+  .result-card { border-radius:1rem; padding:.85rem; transition: all .2s; }
+  .result-card:hover { transform:translateY(-2px); box-shadow:0 14px 34px -16px rgba(0,0,0,.25); }
+
+  .dev-btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:.3rem;
+    font-size:.7rem; font-weight:700; padding:.34rem .6rem; border-radius:.6rem;
+    cursor:pointer; transition:all .18s; border:1px solid transparent;
+  }
+  .dev-btn:hover { transform:translateY(-1px); filter:brightness(.96); box-shadow:0 5px 12px -5px rgba(0,0,0,.3); }
+
+  .badge-pill { font-size:10px; font-weight:800; padding:.18rem .55rem; border-radius:999px; letter-spacing:.3px; }
+  .badge-live { display:inline-flex; flex-direction:column; align-items:center; line-height:1.05;
+    font-size:9px; font-weight:800; padding:.28rem .5rem; border-radius:999px;
+    background:#ECFDF5; color:#16A34A; border:1px solid #BBF7D0; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation: spin .6s linear infinite; }
+
+  @keyframes toast-in {
+    0% { opacity:0; transform: transl(-50%, -16px); }
+    100% { opacity:1; transform: translate(-50%, 0); }
+  }
+  .toast { animation: toast-in .25s cubic-bezier(0.2,0.7,0.2,1) both; }
+
+  .toggle-btn {
+    flex:1; text-align:left; border-radius:0.75rem; padding:0.7rem 0.9rem;
+    border:1px solid #FDE3D4; background:white; cursor:pointer; transition: all 0.2s;
+  }
+  .toggle-btn .t-title { font-size:0.8rem; font-weight:700; color:#71717A; }
+  .toggle-btn .t-desc { font-size:0.68rem; color:#a1a1aa; margin-top:2px; }
+  .toggle-btn.active { border-color:#EC1313; background:#FFF7F0; }
+  .toggle-btn.active .t-title { color:#EC1313; }
+  .toggle-btn.active .t-desc { color:#F04242; }
+
+  .dropzone { transition: all 0.2s; }
+  .dropzone.drag { background:#FFF7F0; border-color:#EC1313 !important; transform: scale(1.005); }
+</style>
+</head>
+<body class="text-netflix-dark min-h-screen flex flex-col">
+
+<!-- ===== HEADER ===== -->
+<header class="sticky top-0 z-30 backdrop-blur-xl bg-white/80 border-b border-netflix-line">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-full shrink-0 overflow-hidden ring-2 ring-netflix-line"
+           style="box-shadow:0 8px 24px -8px rgba(236,19,19,.55)">
+        <img src="avatar.jpg" alt="Nghiện Netflix" class="w-full h-full object-cover" />
+      </div>
+      <div class="leading-tight">
+        <h1 class="text-netflix-red font-extrabold text-base sm:text-lg">Nghiện Netflix</h1>
+        <p class="text-netflix-mute text-[11px] sm:text-xs">Tạo link đăng nhập trực tiếp từ cookie</p>
+      </div>
+    </div>
+    <button class="btn-secondary" onclick="switchTab('guide')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span class="hidden sm:inline">Hướng Dẫn</span>
+    </button>
+  </div>
+</header>
+
+<main class="flex-1 w-full">
+  <div class="max-w-7xl mx-auto px-4 py-5">
+
+    <!-- ===== TAB NAVIGATION ===== -->
+    <div class="bg-netflix-line-soft border border-netflix-line rounded-2xl p-1.5 mb-6 overflow-x-auto">
+      <div class="flex gap-1 min-w-max sm:min-w-0">
+        <button class="tab-btn active flex-1" data-tab="single" onclick="switchTab('single')"><span>🎯</span> Nhập Đơn</button>
+        <button class="tab-btn flex-1" data-tab="batch" onclick="switchTab('batch')"><span>📁</span> Hàng Loạt</button>
+        <button class="tab-btn flex-1" data-tab="combo" onclick="switchTab('combo')"><span>⚙️</span> Combo</button>
+        <button class="tab-btn flex-1" data-tab="guide" onclick="switchTab('guide')"><span>📖</span> Hướng Dẫn</button>
+      </div>
+    </div>
+
+    <!-- ===== TAB 1: NHẬP ĐƠN ===== -->
+    <section id="tab-single" class="tab-panel">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <!-- LEFT -->
+        <div class="lg:col-span-5 card card-hover">
+          <div class="flex items-center gap-2 mb-3">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EC1313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01"/><path d="M16 15.5v.01"/><path d="M12 12v.01"/><path d="M11 17v.01"/><path d="M7 14v.01"/></svg>
+            <h2 class="font-bold text-base">Nhập Cookie</h2>
+          </div>
+          <label class="block text-xs font-medium text-netflix-mute mb-1.5">Dán cookie Netflix (dạng Header, JSON hoặc Netscape):</label>
+          <textarea id="single-input" class="w-full border border-netflix-line rounded-xl p-3 font-mono text-xs resize-y scroll-thin" style="min-height:150px"
+            placeholder="NetflixId=v%3D2%26...; SecureNetflixId=...&#10;hoặc dán JSON / Netscape"></textarea>
+
+          <div class="mt-4">
+            <p class="text-xs font-semibold text-netflix-mute mb-2">Chế độ kiểm tra:</p>
+            <div class="flex gap-2">
+              <button class="toggle-btn active" data-mode="full" onclick="toggleMode('single','full')">
+                <div class="t-title">Thông Tin Đầy Đủ</div>
+                <div class="t-desc">Lấy thông tin account + tạo link</div>
+              </button>
+              <button class="toggle-btn" data-mode="link-only" onclick="toggleMode('single','link-only')">
+                <div class="t-title">Chỉ Tạo Link</div>
+                <div class="t-desc">Chỉ gen link, nhanh hơn</div>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1 mt-4">
+            <button class="btn-ghost" onclick="document.getElementById('single-file').click()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M14 2v6h6"/></svg> File
+            </button>
+            <button class="btn-ghost" onclick="handlePaste('single-input')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> Dán
+            </button>
+            <button class="btn-ghost" onclick="copyHeader()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Sao chép Header
+            </button>
+            <button class="btn-ghost ml-auto" onclick="clearInput('single-input')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H7L3 16a1.4 1.4 0 0 1 0-2l9-9a1.4 1.4 0 0 1 2 0l6 6a1.4 1.4 0 0 1 0 2l-7 7"/><path d="M18 13 9 4"/></svg> Xoá
+            </button>
+            <input type="file" id="single-file" accept=".txt,.json,.zip" class="hidden" onchange="handleFileUpload(event,'single-input')" />
+          </div>
+
+          <button id="single-submit" class="btn-primary w-full mt-4" onclick="processSingleCookie()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <span>Tạo Link Đăng Nhập</span>
+          </button>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="lg:col-span-7">
+          <div id="single-result">
+            <div class="card flex flex-col items-center justify-center text-center py-12">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d4d4d8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
+              <p class="text-sm text-netflix-mute mt-3">Chưa có kết quả... Nhấn <span class="text-netflix-red font-bold">"Tạo Link"</span> để bắt đầu.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB 2: HÀNG LOẠT ===== -->
+    <section id="tab-batch" class="tab-panel hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <!-- LEFT -->
+        <div class="lg:col-span-5 card card-hover">
+          <div class="flex items-center gap-2 mb-3">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EC1313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+            <h2 class="font-bold text-base">Xử Lý Hàng Loạt</h2>
+          </div>
+
+          <div id="batch-drop" class="dropzone border-2 border-dashed border-netflix-line rounded-xl p-8 text-center cursor-pointer"
+               onclick="document.getElementById('batch-file').click()">
+            <svg class="mx-auto" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#EC1313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p class="text-sm mt-3 text-netflix-dark">Kéo thả nhiều file vào đây hoặc <span class="text-netflix-red font-semibold">bấm để chọn</span></p>
+            <p class="text-xs text-netflix-mute mt-1">Hỗ trợ: .txt, .json, .zip</p>
+            <input type="file" id="batch-file" accept=".txt,.json,.zip" multiple class="hidden" onchange="handleBatchFiles(event)" />
+          </div>
+
+          <div id="batch-filelist" class="hidden bg-netflix-line-soft rounded-xl p-3 mt-3 space-y-1.5 scroll-thin" style="max-height:140px;overflow:auto"></div>
+
+          <div class="mt-4">
+            <p class="text-xs font-semibold text-netflix-mute mb-2">Chế độ:</p>
+            <div class="flex gap-2">
+              <button class="toggle-btn active" data-mode="full" onclick="toggleMode('batch','full')">
+                <div class="t-title">Thông Tin Đầy Đủ</div>
+                <div class="t-desc">Lấy account + link</div>
+              </button>
+              <button class="toggle-btn" data-mode="token-only" onclick="toggleMode('batch','token-only')">
+                <div class="t-title">Chỉ Token</div>
+                <div class="t-desc">Nhanh hơn, chỉ token</div>
+              </button>
+            </div>
+          </div>
+
+          <button id="batch-submit" class="btn-primary btn-green w-full mt-4" onclick="processBatch()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Xử Lý File</span>
+          </button>
+
+          <div id="batch-progress" class="hidden mt-3">
+            <div class="w-full h-2 rounded-full overflow-hidden" style="background:#FDE3D4">
+              <div id="batch-bar" class="h-full rounded-full transition-all" style="width:0%;background:linear-gradient(90deg,#10B981,#059669)"></div>
+            </div>
+            <p id="batch-progress-text" class="text-[11px] text-netflix-mute text-center mt-1.5">Đang xử lý...</p>
+          </div>
+
+          <div class="flex items-start gap-2 mt-4 rounded-xl p-3" style="background:#FEF3C7;border:1px solid #FDE68A">
+            <span class="text-base leading-none">⚠️</span>
+            <p class="text-xs text-amber-800">Lưu ý: Link đăng nhập chỉ có hiệu lực trong vòng 1 giờ. Hãy sử dụng ngay sau khi tạo.</p>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="lg:col-span-7 card card-hover">
+          <div class="flex items-center justify-between mb-3 gap-2">
+            <h2 class="font-bold text-base">Kết Quả</h2>
+            <div class="flex gap-1.5">
+              <button class="btn-secondary" onclick="copyBatchLinks()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Link
+              </button>
+              <button class="btn-secondary" onclick="saveBatch()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Lưu
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <div class="rounded-xl p-2.5 text-center bg-white border border-netflix-line">
+              <div id="batch-total" class="text-lg font-extrabold text-netflix-dark">0</div>
+              <div class="text-[10px] text-netflix-mute font-medium">Tổng</div>
+            </div>
+            <div class="rounded-xl p-2.5 text-center" style="background:#F0FDF4;border:1px solid #BBF7D0">
+              <div id="batch-live" class="text-lg font-extrabold" style="color:#16A34A">0</div>
+              <div class="text-[10px] font-medium" style="color:#16A34A">Còn hạn</div>
+            </div>
+            <div class="rounded-xl p-2.5 text-center" style="background:#FEF2F2;border:1px solid #FECACA">
+              <div id="batch-dead" class="text-lg font-extrabold" style="color:#DC2626">0</div>
+              <div class="text-[10px] font-medium" style="color:#DC2626">Hết hạn</div>
+            </div>
+          </div>
+
+          <div id="batch-filter" class="hidden items-center justify-between gap-2 mb-3 flex-wrap">
+            <div class="flex gap-1.5 flex-wrap">
+              <button class="filter-chip active" data-f="all" onclick="setBatchFilter('all')">Tất cả (0)</button>
+              <button class="filter-chip" data-f="live" onclick="setBatchFilter('live')">Còn hạn (0)</button>
+              <button class="filter-chip" data-f="dead" onclick="setBatchFilter('dead')">Hết hạn (0)</button>
+            </div>
+            <span class="text-[11px] text-netflix-mute">Tỷ lệ còn hạn: <b id="batch-ratio" class="text-netflix-dark">0%</b></span>
+          </div>
+
+          <div id="batch-result" class="space-y-2.5 scroll-thin" style="max-height:560px;overflow:auto">
+            <p class="text-sm text-netflix-mute text-center py-8">Chưa có kết quả...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB 3: COMBO ===== -->
+    <section id="tab-combo" class="tab-panel hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <!-- LEFT -->
+        <div class="lg:col-span-5 card card-hover">
+          <div class="flex items-center gap-2 mb-3">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EC1313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+            <h2 class="font-bold text-base">Combo Check</h2>
+          </div>
+          <p class="text-xs text-netflix-mute mb-1.5">Định dạng mỗi dòng: <span class="font-mono font-semibold px-1.5 py-0.5 rounded" style="background:#FFF7F0;color:#EC1313;border:1px solid #FDE3D4">tk:mk:cookie</span></p>
+          <p class="text-xs text-netflix-mute mb-3">Tự phát hiện và kiểm tra từng cookie, chỉ hiển thị cookie còn hạn.</p>
+
+          <textarea id="combo-input" class="w-full border border-netflix-line rounded-xl p-3 font-mono text-xs resize-y scroll-thin" style="min-height:150px"
+            oninput="countComboLines()"
+            placeholder="user1@mail.com:pass123:NetflixId=v%3D2%26...&#10;user2@mail.com:pass456:NetflixId=v%3D2%26...&#10;user3@mail.com:pass789:NetflixId=v%3D2%26..."></textarea>
+
+          <div class="flex flex-wrap items-center gap-1 mt-3">
+            <button class="btn-ghost" onclick="document.getElementById('combo-file').click()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M14 2v6h6"/></svg> File
+            </button>
+            <button class="btn-ghost" onclick="clearInput('combo-input'); countComboLines()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H7L3 16a1.4 1.4 0 0 1 0-2l9-9a1.4 1.4 0 0 1 2 0l6 6a1.4 1.4 0 0 1 0 2l-7 7"/><path d="M18 13 9 4"/></svg> Xoá
+            </button>
+            <span id="combo-count" class="ml-auto text-xs text-netflix-mute">Phát hiện: 0 dòng</span>
+            <input type="file" id="combo-file" accept=".txt,.json" class="hidden" onchange="handleFileUpload(event,'combo-input'); countComboLines()" />
+          </div>
+
+          <button id="combo-submit" class="btn-primary btn-teal w-full mt-4" onclick="processCombo()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+            <span>Kiểm tra Cookie</span>
+          </button>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="lg:col-span-7 card card-hover">
+          <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
+            <div class="flex items-center gap-2">
+              <h2 class="font-bold text-base">Cookie Còn Hạn</h2>
+              <span id="combo-badge" class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:#ECFDF5;color:#16A34A;border:1px solid #BBF7D0">0</span>
+            </div>
+            <button class="btn-secondary" onclick="downloadCombo()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Tải Tất Cả
+            </button>
+          </div>
+
+          <div id="combo-progress" class="hidden mb-3">
+            <div class="w-full h-2 rounded-full overflow-hidden" style="background:#FDE3D4">
+              <div id="combo-bar" class="h-full rounded-full transition-all" style="width:0%;background:linear-gradient(90deg,#0D9488,#0F766E)"></div>
+            </div>
+            <p id="combo-progress-text" class="text-[11px] text-netflix-mute text-center mt-1.5">Đang kiểm tra...</p>
+          </div>
+
+          <div class="flex items-start gap-2 mb-3 rounded-xl p-3" style="background:#FEF3C7;border:1px solid #FDE68A">
+            <span class="text-base leading-none">⚠️</span>
+            <p class="text-xs text-amber-800">Lưu ý: Cookie còn hạn có thể thay đổi bất cứ lúc nào. Hãy kiểm tra lại trước khi dùng. Link chỉ có hiệu lực trong vòng <b>1 giờ</b>.</p>
+          </div>
+
+          <div id="combo-result" class="space-y-2.5 scroll-thin" style="max-height:520px;overflow:auto">
+            <p class="text-sm text-netflix-mute text-center py-10">Chưa có cookie còn hạn...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB 4: HƯỚNG DẪN ===== -->
+    <section id="tab-guide" class="tab-panel hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <!-- LEFT 2/3 -->
+        <div class="lg:col-span-2 card card-hover">
+          <div class="flex items-center gap-2 mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EC1313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            <h2 class="font-bold text-base">Hướng Dẫn Sử Dụng</h2>
+          </div>
+
+          <div class="space-y-4" id="guide-steps"></div>
+
+          <h3 class="font-bold text-sm mt-7 mb-3">Tính Năng</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="guide-features"></div>
+        </div>
+
+        <!-- RIGHT sidebar 1/3 -->
+        <div class="card card-hover">
+          <div class="flex items-center gap-2 mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EC1313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <h2 class="font-bold text-base">Lưu Ý</h2>
+          </div>
+          <ul class="space-y-3" id="guide-notes"></ul>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="border-t border-netflix-line mt-6" style="background:linear-gradient(180deg,#FFF7F0,#fff)">
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flex flex-col items-center text-center mb-5">
+      <img src="avatar.jpg" alt="Nghiện Netflix" class="w-16 h-16 rounded-2xl object-cover ring-2 ring-netflix-line shadow-lg mb-2" />
+      <h3 class="font-extrabold text-netflix-red text-lg flex items-center gap-1.5">
+        <span class="emoji-float">🍿</span> Nghiện Netflix <span class="emoji-float" style="animation-delay:.3s">🎬</span>
+      </h3>
+      <p class="text-netflix-mute text-xs mt-1">Tham gia cộng đồng & nhận tài khoản miễn phí 👇</p>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <!-- Zalo -->
+      <a href="https://zalo.me/g/d70utixfi55b9dxj5uqf" target="_blank" rel="noopener" class="contact-card">
+        <span class="contact-ico" style="background:linear-gradient(135deg,#0068FF,#00A2FF)">
+          <svg width="26" height="26" viewBox="0 0 48 48" fill="white"><path d="M24 4C12.4 4 3 12.6 3 23.2c0 5.9 2.9 11.1 7.5 14.6-.3 2.4-1.3 5-2.7 7 2.9-.5 6-1.9 8.1-3.4 2.5.8 5.2 1.2 8.1 1.2 11.6 0 21-8.6 21-19.4S35.6 4 24 4z"/></svg>
+        </span>
+        <div class="text-left leading-tight">
+          <div class="text-[11px] font-semibold text-netflix-mute flex items-center gap-1">Nhóm Zalo <span class="emoji-float">💬</span></div>
+          <div class="text-sm font-bold text-netflix-dark">Zalo Nghiện Netflix</div>
+        </div>
+      </a>
+
+      <!-- Telegram Bot -->
+      <a href="https://t.me/netpholicvqk_bot?start=ref_6599096327" target="_blank" rel="noopener" class="contact-card">
+        <span class="contact-ico" style="background:linear-gradient(135deg,#229ED9,#33B5E5)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M21.9 4.3 18.6 19.9c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.2-8.3c.4-.4-.1-.6-.6-.2L6.1 13.5l-4.9-1.5c-1.1-.3-1.1-1 .2-1.5l19.2-7.4c.9-.3 1.7.2 1.3 1.7z"/></svg>
+        </span>
+        <div class="text-left leading-tight">
+          <div class="text-[11px] font-semibold text-netflix-mute flex items-center gap-1">Bot Telegram <span class="emoji-float" style="animation-delay:.4s">🤖</span></div>
+          <div class="text-sm font-bold text-netflix-dark">Bot Tele Netflix Free</div>
+        </div>
+      </a>
+    </div>
+
+    <p class="text-center text-netflix-mute text-xs mt-6">Nghiện Netflix © 2026 · Made with <span class="emoji-float" style="color:#EC1313">❤️</span></p>
+  </div>
+</footer>
+
+<!-- Toast container -->
+<div id="toast-wrap" class="fixed top-4 left-1/2 z-50 flex flex-col items-center gap-2" style="transform:translateX(-50%)"></div>
+
+<script>
+/* ================= STATE ================= */
+const state = {
+  currentTab: 'single',
+  singleMode: 'full',
+  batchMode: 'full',
+  batchFiles: [],
+  batchResults: [],
+  comboResults: [],
+};
+
+/* ================= TAB SWITCH ================= */
+function switchTab(tab){
+  state.currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
+  const panel = document.getElementById('tab-'+tab);
+  panel.classList.remove('hidden');
+  panel.classList.remove('animate-fade-in'); void panel.offsetWidth; panel.classList.add('animate-fade-in');
+}
+
+/* ================= TOGGLE MODE ================= */
+function toggleMode(tab, mode){
+  if(tab==='single') state.singleMode = mode;
+  if(tab==='batch') state.batchMode = mode;
+  const panel = document.getElementById('tab-'+tab);
+  panel.querySelectorAll('.toggle-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+}
+
+/* ================= CLIPBOARD / FILE ================= */
+async function handlePaste(targetId){
+  try{
+    const text = await navigator.clipboard.readText();
+    document.getElementById(targetId).value = text;
+    if(targetId==='combo-input') countComboLines();
+    showToast('Đã dán nội dung!', 'success');
+  }catch(e){ showToast('Không truy cập được clipboard', 'error'); }
+}
+
+function copyHeader(){
+  const sample = 'NetflixId=v%3D2%26mac%3DEXAMPLE; SecureNetflixId=v%3D2%26mac%3DEXAMPLE';
+  copyToClipboard(sample);
+}
+
+function copyToClipboard(text){
+  navigator.clipboard.writeText(text).then(
+    ()=>showToast('Đã sao chép!', 'success'),
+    ()=>showToast('Sao chép thất bại', 'error')
+  );
+}
+
+function clearInput(id){
+  document.getElementById(id).value = '';
+}
+
+function handleFileUpload(ev, targetId){
+  const file = ev.target.files[0];
+  if(!file) return;
+  if(file.name.endsWith('.zip')){
+    document.getElementById(targetId).value = '[ZIP] ' + file.name + ' đã được nạp (demo).';
+    showToast('Đã nạp file zip (demo)', 'info'); return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById(targetId).value = e.target.result;
+    if(targetId==='combo-input') countComboLines();
+    showToast('Đã nạp file: '+file.name, 'success');
+  };
+  reader.readAsText(file);
+}
+
+/* ================= BATCH FILES ================= */
+function handleBatchFiles(ev){
+  addBatchFiles([...ev.target.files]);
+}
+function addBatchFiles(files){
+  files.forEach(f=>state.batchFiles.push(f));
+  renderBatchFiles();
+}
+function renderBatchFiles(){
+  const wrap = document.getElementById('batch-filelist');
+  if(state.batchFiles.length===0){ wrap.classList.add('hidden'); wrap.innerHTML=''; return; }
+  wrap.classList.remove('hidden');
+  wrap.innerHTML = state.batchFiles.map((f,i)=>`
+    <div class="flex items-center justify-between gap-2 text-xs bg-white border border-netflix-line rounded-lg px-2.5 py-1.5">
+      <span class="truncate flex items-center gap-1.5 min-w-0">📄 <span class="truncate">${esc(f.name)}</span></span>
+      <span class="flex items-center gap-1.5 shrink-0">
+        <span class="text-netflix-mute">${fmtSize(f.size)}</span>
+        <button class="btn-ghost !p-1" onclick="removeBatchFile(${i})">🗑️</button>
+      </span>
+    </div>`).join('');
+}
+function fmtSize(b){
+  if(b<1024) return b+' B';
+  if(b<1024*1024) return Math.round(b/1024)+' KB';
+  return (b/1048576).toFixed(1)+' MB';
+}
+function removeBatchFile(i){ state.batchFiles.splice(i,1); renderBatchFiles(); }
+
+/* drag & drop */
+const dz = document.getElementById('batch-drop');
+['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault(); dz.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault(); dz.classList.remove('drag');}));
+dz.addEventListener('drop', e=>{ addBatchFiles([...e.dataTransfer.files]); showToast('Đã thêm '+e.dataTransfer.files.length+' file','success'); });
+
+/* ================= BACKEND API ================= */
+async function api(path, body){
+  const res = await fetch(path, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  if(!res.ok){
+    let msg = 'HTTP '+res.status;
+    try{ const j = await res.json(); if(j.error) msg = j.error; }catch(e){}
+    throw new Error(msg);
+  }
+  return res.json();
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function setLoading(btnId, loading){
+  const btn = document.getElementById(btnId);
+  btn.disabled = loading;
+  if(loading){
+    btn.dataset.label = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner"></span><span>Đang xử lý...</span>';
+  }else if(btn.dataset.label){
+    btn.innerHTML = btn.dataset.label;
+  }
+}
+
+/* ================= TAB 1: SINGLE ================= */
+async function processSingleCookie(){
+  const val = document.getElementById('single-input').value.trim();
+  if(!val){ showToast('Vui lòng nhập cookie!', 'error'); return; }
+  setLoading('single-submit', true);
+  try{
+    const r = await api('/api/single', {cookie: val, mode: state.singleMode});
+    if(r.live){
+      state.singleResult = r;
+      renderSingleResult(r);
+      showToast('Tạo link thành công!', 'success');
+    }else{
+      renderSingleError(r.error || 'Cookie đã hết hạn hoặc không hợp lệ');
+      showToast(r.error || 'Cookie hết hạn', 'error');
+    }
+  }catch(e){
+    renderSingleError('Không kết nối được server. Hãy chạy <b>server.py</b> rồi mở http://127.0.0.1:8799');
+    showToast('Lỗi kết nối server', 'error');
+  }
+  setLoading('single-submit', false);
+}
+
+function renderSingleError(msg){
+  document.getElementById('single-result').innerHTML = `
+    <div class="card animate-fade-in flex flex-col items-center text-center py-10">
+      <div class="w-12 h-12 rounded-full grid place-items-center mb-2" style="background:#FEE2E2">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      <p class="text-sm text-netflix-dark font-semibold">Không tạo được link</p>
+      <p class="text-xs text-netflix-mute mt-1">${msg}</p>
+    </div>`;
+}
+
+function row(label, value, strong){
+  return `<div class="flex items-center justify-between gap-2 py-1.5">
+    <span class="text-xs text-netflix-mute">${esc(label)}</span>
+    <span class="text-sm ${strong?'font-bold':'font-semibold'} truncate text-right">${esc(value)}</span>
+  </div>`;
+}
+
+function renderSingleResult(r){
+  const a = r.account || {};
+  const full = state.singleMode === 'full';
+  const planUp = (a.plan||'Unknown');
+  const streamsTxt = (a.maxStreams && a.maxStreams!=='Unknown') ? (a.maxStreams+' thiết bị') : 'Đa thiết bị';
+
+  const accountCard = !full ? '' : `
+    <div class="card card-hover">
+      <div class="flex items-center justify-between gap-2 mb-3">
+        <div class="flex items-center gap-2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EC1313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <h2 class="font-bold text-base">Thông Tin Tài Khoản</h2>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-[11px] font-bold px-2 py-0.5 rounded-full text-white" style="background:#22C55E">CÒN HẠN</span>
+          <span class="text-[11px] font-bold px-2 py-0.5 rounded-full" style="background:#FEF3C7;color:#B45309">${esc(String(planUp).toUpperCase())}</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 divide-y sm:divide-y-0" style="border-color:#FDE3D4">
+        <div class="sm:border-r sm:pr-1" style="border-color:#FDE3D4">
+          ${row('Gói', a.plan)}
+          ${row('Quốc gia', a.country)}
+          ${row('Số thiết bị', a.maxStreams)}
+          ${row('Email', a.email)}
+          ${row('Kỳ thanh toán tới', a.nextBilling)}
+          ${row('Số điện thoại', a.phone)}
+          ${row('Thành viên thêm', a.extra)}
+        </div>
+        <div class="sm:pl-1">
+          ${row('Giá gói', a.price)}
+          ${row('Chất lượng', a.quality)}
+          ${row('Hồ sơ', a.name)}
+          ${row('Ngày tham gia', a.memberSince)}
+          ${row('Phương thức TT', a.payment)}
+          ${row('Tạm giữ thanh toán', a.hold)}
+          ${row('Hết hạn token', r.expires)}
+        </div>
+      </div>
+      <div class="flex items-center gap-2 mt-3 rounded-xl p-2.5" style="background:#FFF7F0;border:1px solid #FDE3D4">
+        <svg width="14" height="14" class="shrink-0" viewBox="0 0 24 24" fill="none" stroke="#71717A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span class="font-mono text-[11px] truncate text-netflix-mute flex-1">nftoken=${esc(String(r.token).slice(0,28))}…</span>
+        <button class="btn-secondary !py-1" onclick="copyToClipboard(state.singleResult.token)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Sao chép ID
+        </button>
+      </div>
+    </div>`;
+
+  const ICONS = {
+    computer: '<rect class="scr" x="2" y="3" width="20" height="14" rx="2" fill="#fff" stroke="currentColor"/><path d="M8 21h8M12 17v4" stroke="currentColor"/>',
+    phone: '<rect class="scr" x="5" y="2" width="14" height="20" rx="3" fill="#fff" stroke="currentColor"/><line x1="11" y1="18" x2="13" y2="18" stroke="currentColor"/>',
+    tv: '<rect class="scr" x="2" y="7" width="20" height="13" rx="2" fill="#fff" stroke="currentColor"/><polyline points="8 3 12 7 16 3" stroke="currentColor"/>'
+  };
+  const device = (kind, name, bg, fg) => `
+    <div class="device-card ${kind==='tv'?'tv':''}" style="background:${bg};border:1px solid ${fg}33" onclick="openDevice('${kind}')">
+      <div class="device-ico" style="background:${fg}1a;color:${fg}">
+        <span class="ring"></span>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[kind]}</svg>
+      </div>
+      <div class="text-sm font-extrabold" style="color:${fg}">${name}</div>
+      <button class="btn-secondary !py-1 w-full mt-2 justify-center" onclick="event.stopPropagation();copyDevice('${kind}')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Sao chép
+      </button>
+    </div>`;
+
+  const linkCard = `
+    <div class="card card-hover">
+      <div class="flex items-center justify-between gap-2 mb-3">
+        <div class="flex items-center gap-2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EC1313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <h2 class="font-bold text-base">Link Đăng Nhập Trực Tiếp</h2>
+        </div>
+        <span class="text-[11px] font-bold px-2 py-0.5 rounded-full" style="background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0">${esc(streamsTxt)}</span>
+      </div>
+      <div class="grid grid-cols-3 gap-2.5">
+        ${device('computer','Máy tính','#EFF6FF','#2563EB')}
+        ${device('phone','Điện thoại','#F5F3FF','#7C3AED')}
+        ${device('tv','Tivi','#FFF7ED','#EA580C')}
+      </div>
+      <p class="text-[11px] text-netflix-mute text-center mt-2.5">👆 Bấm vào thiết bị để mở link · hoặc bấm <b>Sao chép</b></p>
+      <div class="flex items-start gap-2 mt-3 rounded-xl p-3" style="background:#FEF3C7;border:1px solid #FDE68A">
+        <span class="text-base leading-none">⚠️</span>
+        <p class="text-xs text-amber-800"><b>Lưu ý:</b> Link chỉ có hiệu lực trong vòng <b>1 giờ</b>. Nếu cần đăng nhập lại sau đó, vui lòng tạo link mới từ cookie. Mỗi thiết bị dùng một định dạng link riêng — chọn đúng loại thiết bị bạn muốn đăng nhập 💡</p>
+      </div>
+    </div>`;
+
+  document.getElementById('single-result').innerHTML =
+    `<div class="animate-fade-in space-y-5">${accountCard}${linkCard}</div>`;
+}
+
+function openDevice(kind){
+  const r = state.singleResult; if(!r) return;
+  window.open(r.links[kind], '_blank');
+}
+function copyDevice(kind){
+  const r = state.singleResult; if(!r) return;
+  copyToClipboard(r.links[kind]);
+}
+
+/* ================= TAB 2: BATCH ================= */
+function readFileText(file){
+  return new Promise((resolve)=>{
+    if(file.name.endsWith('.zip')){ resolve(''); return; }
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result || '');
+    reader.onerror = ()=> resolve('');
+    reader.readAsText(file);
+  });
+}
+function extractItems(text){
+  const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  const headerLines = lines.filter(l=>/NetflixId=/i.test(l));
+  if(headerLines.length > 1) return headerLines;   // mỗi dòng 1 cookie (Header)
+  return [text];                                    // cả file = 1 cookie (JSON/Netscape)
+}
+
+async function processBatch(){
+  if(state.batchFiles.length===0){ showToast('Chưa chọn file nào!', 'error'); return; }
+  setLoading('batch-submit', true);
+
+  let items = [];
+  for(const f of state.batchFiles){
+    const txt = await readFileText(f);
+    if(txt) items = items.concat(extractItems(txt));
+  }
+  if(items.length===0){
+    setLoading('batch-submit', false);
+    showToast('Không tìm thấy cookie trong file', 'error');
+    return;
+  }
+
+  const prog = document.getElementById('batch-progress');
+  const bar = document.getElementById('batch-bar');
+  const ptext = document.getElementById('batch-progress-text');
+  prog.classList.remove('hidden');
+
+  const total = items.length;
+  let done = 0;
+  const results = new Array(total);
+  state.batchFilter = state.batchFilter || 'all';
+
+  const btn = document.getElementById('batch-submit');
+  const updateBtn = ()=>{ btn.innerHTML = `<span class="spinner"></span><span>Đang xử lý ${done}/${total}...</span>`; };
+  updateBtn();
+
+  const CONC = 15;   // xử lý 15 cookie/lần song song
+  let idx = 0;
+  async function worker(){
+    while(idx < total){
+      const my = idx++;
+      try{
+        results[my] = await api('/api/single', {cookie: items[my], mode: state.batchMode});
+      }catch(e){
+        results[my] = {ok:false, live:false, error:'Lỗi kết nối server'};
+      }
+      done++;
+      const pct = Math.round(done/total*100);
+      bar.style.width = pct+'%';
+      ptext.textContent = `Đang xử lý ${done}/${total} · ${pct}% · ${CONC} cookie/lần song song`;
+      updateBtn();
+      if(done % 4 === 0 || done === total){
+        state.batchResults = results.filter(Boolean);
+        renderBatchResults();
+      }
+    }
+  }
+  await Promise.all(Array.from({length: Math.min(CONC, total)}, worker));
+
+  state.batchResults = results.filter(Boolean);
+  renderBatchResults();
+  setLoading('batch-submit', false);
+  setTimeout(()=>prog.classList.add('hidden'), 1800);
+  const live = state.batchResults.filter(x=>x.live).length;
+  showToast(`Hoàn tất: ${live}/${total} còn hạn`, 'success');
+}
+
+function setBatchFilter(f){ state.batchFilter = f; renderBatchResults(); }
+
+function buildLabel(x, i){
+  const a = x.account||{};
+  if(x.live){
+    const parts = [];
+    if(a.plan && a.plan!=='Unknown') parts.push('['+a.plan+']');
+    if(a.country && a.country!=='Unknown') parts.push('['+a.country+']');
+    const email = (a.email && a.email!=='Unknown') ? a.email : '';
+    const s = (parts.join(' ') + ' ' + email).trim();
+    return s || ('Tài khoản #'+(i+1));
+  }
+  return 'Cookie #'+(i+1);
+}
+
+const _MONITOR = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>';
+const _PHONE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>';
+const _TV = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="13" rx="2"/><polyline points="8 3 12 7 16 3"/></svg>';
+
+function devButtons(i){
+  const D=(kind,label,fg,bg,svg)=>`<button class="dev-btn" style="color:${fg};background:${bg};border-color:${fg}33" onclick="batchOpen(${i},'${kind}')" title="Mở link ${label}">${svg}<span>${label}</span></button>`;
+  return D('computer','Desktop','#2563EB','#EFF6FF',_MONITOR)
+       + D('phone','Mobile','#7C3AED','#F5F3FF',_PHONE)
+       + D('tv','TV','#DC2626','#FEF2F2',_TV);
+}
+function batchOpen(i, kind){ const x=state.batchResults[i]; if(x&&x.links) window.open(x.links[kind],'_blank'); }
+
+/* Lưới thông tin gọn: 4 trường lõi luôn hiện + các trường phụ chỉ hiện khi có dữ liệu */
+function infoGrid(a){
+  const core = [['Gói',a.plan],['Quốc gia',a.country],['Chất lượng',a.quality],['Thiết bị',a.maxStreams]];
+  const extra = [['Hồ sơ',a.name],['Ngày tham gia',a.memberSince],['Giá gói',a.price],
+                 ['Phương thức',a.payment],['SĐT',a.phone],['Kỳ TT tới',a.nextBilling]];
+  const cells = core.concat(extra.filter(([k,v])=>v && v!=='Unknown'));
+  let html = '<div class="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-0.5 mt-2 text-[11px]">';
+  cells.forEach(([k,v])=>{ html += `<div class="truncate"><span class="text-netflix-mute">${k}:</span> <b>${esc(v)}</b></div>`; });
+  html += '</div>';
+  if(a.email && a.email!=='Unknown')
+    html += `<div class="text-[11px] mt-0.5 truncate"><span class="text-netflix-mute">Email:</span> <b>${esc(a.email)}</b></div>`;
+  return html;
+}
+
+function batchCard(x, i){
+  const a = x.account||{};
+  const live = x.live;
+  const bg = live ? '#F0FDF4' : '#FEF2F2';
+  const border = live ? '#BBF7D0' : '#FECACA';
+  const icon = live
+    ? '<svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>'
+    : '<svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+  const planTxt = String(a.plan||'').toUpperCase();
+  const badges = live
+    ? `<span class="badge-pill" style="background:#FEF3C7;color:#B45309">${esc(planTxt && planTxt!=='UNKNOWN' ? planTxt : 'NETFLIX')}</span><span class="badge-live">CÒN<br>HẠN</span>`
+    : `<span class="badge-pill" style="background:#FEE2E2;color:#DC2626">HẾT HẠN</span>`;
+  const body = live
+    ? `${infoGrid(a)}<div class="flex gap-1.5 mt-2 flex-wrap">${devButtons(i)}</div>`
+    : `<div class="text-[11px] mt-1.5" style="color:#DC2626">⚠ ${esc(x.error||'Cookie không hợp lệ (login page detected)')}</div>`;
+  return `<div class="result-card animate-fade-in" style="background:${bg};border:1px solid ${border}">
+    <div class="flex items-start justify-between gap-2">
+      <div class="flex items-start gap-1.5 min-w-0">${icon}<span class="text-xs font-semibold truncate" title="${esc(buildLabel(x,i))}">${esc(buildLabel(x,i))}</span></div>
+      <div class="flex items-center gap-1 shrink-0">${badges}</div>
+    </div>
+    ${body}
+  </div>`;
+}
+
+function renderBatchResults(){
+  const res = (state.batchResults||[]).filter(Boolean);
+  const total = res.length;
+  const live = res.filter(x=>x.live).length;
+  const dead = total - live;
+  document.getElementById('batch-total').textContent = total;
+  document.getElementById('batch-live').textContent = live;
+  document.getElementById('batch-dead').textContent = dead;
+
+  const fwrap = document.getElementById('batch-filter');
+  const wrap = document.getElementById('batch-result');
+  if(total===0){
+    fwrap.classList.add('hidden');
+    wrap.innerHTML='<p class="text-sm text-netflix-mute text-center py-10">Chưa có kết quả...</p>';
+    return;
+  }
+  fwrap.classList.remove('hidden'); fwrap.classList.add('flex');
+  const filter = state.batchFilter || 'all';
+  fwrap.querySelectorAll('.filter-chip').forEach(c=>{
+    const f = c.dataset.f;
+    c.textContent = f==='all' ? `Tất cả (${total})` : f==='live' ? `Còn hạn (${live})` : `Hết hạn (${dead})`;
+    c.classList.toggle('active', f===filter);
+  });
+  document.getElementById('batch-ratio').textContent = (total ? Math.round(live/total*100) : 0)+'%';
+
+  let html = '';
+  res.forEach((x,i)=>{
+    if(filter==='live' && !x.live) return;
+    if(filter==='dead' && x.live) return;
+    html += batchCard(x, i);
+  });
+  wrap.innerHTML = html || '<p class="text-sm text-netflix-mute text-center py-8">Không có mục nào trong bộ lọc này.</p>';
+}
+
+function liveLinks(arr){ return (arr||[]).filter(x=>x.live).map(x=>x.links.phone); }
+function copyBatchLinks(){
+  const links = liveLinks(state.batchResults);
+  if(links.length===0){ showToast('Không có link còn hạn', 'error'); return; }
+  copyToClipboard(links.join('\n'));
+}
+function saveBatch(){
+  const rows = (state.batchResults||[]).filter(x=>x.live)
+    .map(x=>`${(x.account&&x.account.email)||''} | ${(x.account&&x.account.plan)||''} | ${x.links.phone}`);
+  if(rows.length===0){ showToast('Không có dữ liệu để lưu', 'error'); return; }
+  downloadText('nghien-netflix-batch.txt', rows.join('\n'));
+  showToast('Đã lưu kết quả!', 'success');
+}
+
+/* ================= TAB 3: COMBO =================
+   Định dạng mỗi dòng: tk:mk:cookie
+   - Tách cookie bằng cách tìm "NetflixId=" (chuẩn nhất, không vỡ khi
+     mật khẩu/cookie có chứa dấu ":"), fallback split theo dấu ":".
+*/
+function parseComboLine(line){
+  line = line.trim();
+  if(!line) return null;
+  const m = line.match(/NetflixId=/i);
+  if(m){
+    const idx = m.index;
+    const prefix = line.slice(0, idx).replace(/:+$/,'');   // "tk:mk"
+    const user = (prefix.split(':')[0] || '').trim() || '(không tên)';
+    return { user, cookie: line.slice(idx) };
+  }
+  // fallback: tk:mk:cookie
+  const parts = line.split(':');
+  if(parts.length < 3) return null;
+  return { user: (parts[0]||'').trim() || '(không tên)', cookie: parts.slice(2).join(':') };
+}
+
+function countComboLines(){
+  const lines = document.getElementById('combo-input').value.split('\n')
+    .map(l=>l.trim()).filter(l=>l && parseComboLine(l));
+  document.getElementById('combo-count').textContent = 'Phát hiện: '+lines.length+' dòng';
+}
+
+async function processCombo(){
+  const raw = document.getElementById('combo-input').value.split('\n').map(l=>l.trim()).filter(Boolean);
+  const parsed = raw.map(parseComboLine).filter(Boolean);
+  if(parsed.length===0){ showToast('Không phát hiện dòng hợp lệ (tk:mk:cookie)', 'error'); return; }
+  setLoading('combo-submit', true);
+
+  const prog = document.getElementById('combo-progress');
+  const bar = document.getElementById('combo-bar');
+  const ptext = document.getElementById('combo-progress-text');
+  prog.classList.remove('hidden');
+
+  const total = parsed.length;
+  let done = 0, liveCount = 0;
+  const results = [];
+  const btn = document.getElementById('combo-submit');
+  const updateBtn = ()=>{ btn.innerHTML = `<span class="spinner"></span><span>Đang kiểm tra ${done}/${total}...</span>`; };
+  updateBtn();
+
+  const CONC = 15;
+  let idx = 0;
+  async function worker(){
+    while(idx < total){
+      const my = idx++;
+      let r;
+      try{ r = await api('/api/single', {cookie: parsed[my].cookie, mode: 'full'}); }
+      catch(e){ r = {live:false}; }
+      done++;
+      if(r && r.live){ r.user = parsed[my].user; results.push(r); liveCount++; }
+      const pct = Math.round(done/total*100);
+      bar.style.width = pct+'%';
+      ptext.textContent = `Đang kiểm tra ${done}/${total} · ${pct}% · còn hạn: ${liveCount}`;
+      updateBtn();
+      if(done % 3 === 0 || done === total){ state.comboResults = results.slice(); renderComboResults(); }
+    }
+  }
+  await Promise.all(Array.from({length: Math.min(CONC, total)}, worker));
+
+  state.comboResults = results;
+  renderComboResults();
+  setLoading('combo-submit', false);
+  setTimeout(()=>prog.classList.add('hidden'), 1800);
+  showToast(`Tìm thấy ${liveCount}/${total} cookie còn hạn`, liveCount ? 'success' : 'info');
+}
+
+function comboOpen(i, kind){ const x=state.comboResults[i]; if(x&&x.links) window.open(x.links[kind],'_blank'); }
+function comboDevButtons(i){
+  const D=(kind,label,fg,bg,svg)=>`<button class="dev-btn" style="color:${fg};background:${bg};border-color:${fg}33" onclick="comboOpen(${i},'${kind}')" title="Mở link ${label}">${svg}<span>${label}</span></button>`;
+  return D('computer','Desktop','#2563EB','#EFF6FF',_MONITOR)
+       + D('phone','Mobile','#7C3AED','#F5F3FF',_PHONE)
+       + D('tv','TV','#DC2626','#FEF2F2',_TV);
+}
+
+function renderComboResults(){
+  const res = state.comboResults || [];
+  document.getElementById('combo-badge').textContent = res.length;
+  const wrap = document.getElementById('combo-result');
+  if(res.length===0){ wrap.innerHTML='<p class="text-sm text-netflix-mute text-center py-10">Chưa có cookie còn hạn...</p>'; return; }
+  wrap.innerHTML = res.map((r,i)=>{
+    const a = r.account||{};
+    const planTxt = String(a.plan||'').toUpperCase();
+    return `<div class="result-card animate-fade-in" style="background:#F0FDF4;border:1px solid #BBF7D0">
+      <div class="flex items-start justify-between gap-2">
+        <div class="flex items-start gap-1.5 min-w-0">
+          <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+          <span class="text-xs font-semibold truncate" title="${esc(r.user||a.email)}">${esc(r.user||a.email||'(không tên)')}</span>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          <span class="badge-pill" style="background:#FEF3C7;color:#B45309">${esc(planTxt && planTxt!=='UNKNOWN' ? planTxt : 'NETFLIX')}</span>
+          <span class="badge-live">CÒN<br>HẠN</span>
+        </div>
+      </div>
+      ${infoGrid(a)}
+      <div class="flex gap-1.5 mt-2 flex-wrap">${comboDevButtons(i)}</div>
+    </div>`;
+  }).join('');
+}
+
+function downloadCombo(){
+  const res = state.comboResults || [];
+  if(res.length===0){ showToast('Không có cookie để tải', 'error'); return; }
+  const text = res.map(r=>{
+    const a=r.account||{};
+    return `${r.user||''} | ${a.plan||''} | ${a.country||''} | ${r.links.phone}`;
+  }).join('\n');
+  downloadText('nghien-netflix-combo.txt', text);
+  showToast('Đã tải tất cả!', 'success');
+}
+
+/* ================= UTIL ================= */
+function downloadText(filename, text){
+  const blob = new Blob([text], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename; a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ================= TOAST ================= */
+function showToast(msg, type='info'){
+  const colors = {
+    success: 'background:#22C55E;color:white',
+    error:   'background:#EC1313;color:white',
+    info:    'background:#18181B;color:white',
+  };
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = 'toast rounded-xl px-4 py-2.5 text-sm font-semibold shadow-lg flex items-center gap-2';
+  el.style.cssText = colors[type] || colors.info;
+  const icon = type==='success'?'✓':type==='error'?'✕':'ℹ';
+  el.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.style.transition='all .3s'; el.style.opacity='0'; el.style.transform='translateY(-12px)'; setTimeout(()=>el.remove(),300); }, 2500);
+}
+
+/* ================= GUIDE CONTENT ================= */
+const STEPS = [
+  {t:'Lấy cookie Netflix', d:'Đăng nhập Netflix trên trình duyệt, dùng extension hoặc DevTools để lấy cookie (NetflixId, SecureNetflixId).'},
+  {t:'Dán vào ô nhập', d:'Mở tab "Nhập Đơn", dán cookie vào textarea. Hỗ trợ định dạng Header, JSON hoặc Netscape.'},
+  {t:'Chọn chế độ', d:'Chọn "Thông Tin Đầy Đủ" để lấy thông tin account, hoặc "Chỉ Tạo Link" để xử lý nhanh hơn.'},
+  {t:'Tạo link đăng nhập', d:'Nhấn nút "Tạo Link Đăng Nhập". Hệ thống sẽ kiểm tra cookie và sinh link login trực tiếp.'},
+  {t:'Sử dụng link', d:'Mở link để đăng nhập ngay, hoặc sao chép để dùng sau. Lưu ý link chỉ hiệu lực trong 1 giờ.'},
+];
+const FEATURES = [
+  {i:'🔗', t:'Tạo Link Đăng Nhập', d:'Sinh link login trực tiếp từ cookie, không cần nhập mật khẩu.'},
+  {i:'📊', t:'Hiển Thị Thông Tin', d:'Xem plan, email, quốc gia và số luồng tối đa của tài khoản.'},
+  {i:'📁', t:'Hàng Loạt', d:'Xử lý nhiều file cookie cùng lúc, thống kê còn hạn / hết hạn.'},
+  {i:'🧩', t:'Đa Định Dạng', d:'Hỗ trợ Header, JSON, Netscape và combo tk:mk:cookie.'},
+];
+const NOTES = [
+  'Link đăng nhập chỉ có hiệu lực trong vòng <b>1 giờ</b>, hãy dùng ngay khi tạo.',
+  'Cookie có thể bị thu hồi bất cứ lúc nào nếu chủ tài khoản đăng xuất hoặc đổi mật khẩu.',
+  'Đây là <b>công cụ demo</b> — toàn bộ kết quả là dữ liệu mô phỏng, không kết nối Netflix thật.',
+  'Không chia sẻ cookie của bạn cho người lạ để tránh mất tài khoản.',
+];
+
+function renderGuide(){
+  document.getElementById('guide-steps').innerHTML = STEPS.map((s,i)=>`
+    <div class="flex gap-3">
+      <div class="w-9 h-9 rounded-full grid place-items-center text-white font-bold text-sm shrink-0" style="background:linear-gradient(135deg,#EC1313,#F04242)">${i+1}</div>
+      <div>
+        <h4 class="font-bold text-sm text-netflix-dark">${s.t}</h4>
+        <p class="text-xs text-netflix-mute mt-0.5">${s.d}</p>
+      </div>
+    </div>`).join('');
+  document.getElementById('guide-features').innerHTML = FEATURES.map(f=>`
+    <div class="rounded-xl border border-netflix-line p-3" style="background:#FFF7F0">
+      <div class="text-xl mb-1">${f.i}</div>
+      <h5 class="font-bold text-sm text-netflix-red">${f.t}</h5>
+      <p class="text-xs text-netflix-mute mt-0.5">${f.d}</p>
+    </div>`).join('');
+  document.getElementById('guide-notes').innerHTML = NOTES.map(n=>`
+    <li class="flex gap-2 text-xs text-netflix-mute">
+      <span class="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style="background:#EC1313"></span>
+      <span>${n}</span>
+    </li>`).join('');
+}
+
+/* ================= INIT ================= */
+renderGuide();
+countComboLines();
+</script>
+</body>
+</html>
