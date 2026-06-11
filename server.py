@@ -101,9 +101,16 @@ _SSL_CTX.verify_mode = ssl.CERT_NONE
 
 # --------------------------- Parse cookie ---------------------------
 def parse_netscape_cookie_line(line):
-    parts = line.strip().split("\t")
+    line = line.strip()
+    # Chuẩn Netscape: tách bằng Tab
+    parts = line.split("\t")
     if len(parts) >= 7:
         return {parts[5]: parts[6]}
+    # Dự phòng: Tab bị biến thành dấu cách (hay gặp khi DÁN trên điện thoại)
+    if line.startswith(".") or "netflix" in line.lower():
+        parts = re.split(r"\s+", line)
+        if len(parts) >= 7:
+            return {parts[5]: parts[6]}
     return {}
 
 
@@ -151,7 +158,9 @@ def extract_cookie_dict(text):
     for k in COOKIE_KEYS:
         if k in cookie_dict:
             continue
-        m = re.search(rf"(?<!\w){re.escape(k)}=([^;,\s]+)", text)
+        # Nhận cả 'Key=value' (Header) lẫn 'Key value' / 'Key\tvalue' (Netscape,
+        # kể cả khi Tab bị biến thành dấu cách lúc dán trên điện thoại)
+        m = re.search(rf"(?<!\w){re.escape(k)}[=\t ]+([^;,\s]+)", text)
         if m:
             cookie_dict[k] = _decode(m.group(1))
 
