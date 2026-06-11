@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: nghien-netflix
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: singapore   # gần Việt Nam nhất -> độ trễ thấp
+    autoDeploy: true
